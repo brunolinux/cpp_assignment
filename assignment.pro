@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS = \
-    assign0-starter 
+    assign0 \
+    assign1
     
