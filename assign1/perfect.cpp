@@ -53,30 +53,66 @@ void findPerfects(long stop) {
     cout << endl << "Done searching up to " << stop << endl;
 }
 
-long smarterSum(long n) {
-    // edge case
-    if (n <= 1)
-        return 0;
 
-    long total = 1;
-    for (long divisor = 2; divisor <= sqrt(n); divisor++) {
+/* This function takes one argument `n` and calculates the sum
+ * of all proper divisors of `n` excluding itself. To find divisors
+ * a loop iterates over all numbers from 1 to n-1, testing for a
+ * zero remainder from the division.
+ *
+ * Note: long is a C++ type is a variant of int that allows for a
+ * larger range of values. For all intents and purposes, you can
+ * treat it like you would an int.
+ */
+long smarterSum(long n) {
+    if (n <= 1) {
+        return 0;
+    } else if (n == 2 || n == 3) {
+        return 1;
+    }
+
+    long total = 0;
+
+    total += 1;
+
+    long sqrt_n = static_cast<long>(sqrt(n));
+
+    for (long divisor = 2; divisor < sqrt_n; divisor++) {
         if (n % divisor == 0) {
             total += divisor;
-            if (divisor < sqrt(n)) { // edge case
-                long corresponding = n / divisor;
-                total += corresponding;
-            }
+            total += (n / divisor);
         }
     }
 
+    if (sqrt_n * sqrt_n == n) {
+        total += sqrt_n;
+    } else {
+        if (n % sqrt_n == 0) {
+            total += sqrt_n;
+            total += (n / sqrt_n);
+        }
+    }
     return total;
 }
 
+/* This function takes one argument `n` and returns a boolean
+ * (true/false) value indicating whether or not `n` is perfect.
+ * A perfect number is a non-zero positive number whose sum
+ * of its proper divisors is equal to itself.
+ */
 bool isPerfectSmarter(long n) {
-    return (n != 0) && (n == smarterSum(n));
+    /* TODO: Fill in this function. */
+    if (n <= 1) {
+        return false;
+    } else {
+        return (smarterSum(n) == n);
+    }
 }
 
+/* TODO: Replace this comment with a descriptive function
+ * header comment.
+ */
 void findPerfectsSmarter(long stop) {
+     /* TODO: Fill in this function. */
     for (long num = 1; num < stop; num++) {
         if (isPerfectSmarter(num)) {
             cout << "Found perfect number: " << num << endl;
@@ -88,21 +124,24 @@ void findPerfectsSmarter(long stop) {
 }
 
 bool isPrime(long n) {
-    return smarterSum(n) == 1;
+    return (n != 1) && (smarterSum(n) == 1);
 }
 
+/* TODO: Replace this comment with a descriptive function
+ * header comment.
+ */
 long findNthPerfectEuclid(long n) {
-    long k = 1;
-    while (true) {
-        long m = pow(2, k) - 1; // A Mersenne number
-        if (isPrime(m)) {
-            n -= 1;
-            if (n == 0)
-                return pow(2, k - 1) * (pow(2, k) - 1); // the nth perfect number
-        }
-        k++;
+    /* TODO: Fill in this function. */
+    int k = 1;
+    long mersenne;
+    for (long i = 0; i < n; i ++) {
+        do {
+            mersenne = pow(2, k) - 1;
+            k ++;
+        } while (!isPrime(mersenne));
     }
-    return 0;
+    long target = pow(2, k-2) * mersenne;
+    return target;
 }
 
 /* * * * * * Test Cases * * * * * */

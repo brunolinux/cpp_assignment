@@ -35,7 +35,7 @@ string removeNonLetters(string s) {
     return result;
 }
 
-string encode(string s) {
+string character2digital(string s) {
     string result = "";
     Set<char> zero{'A', 'E', 'I', 'O', 'U', 'H', 'W', 'Y'};
     Set<char> one{'B', 'F', 'P', 'V'};
@@ -46,26 +46,27 @@ string encode(string s) {
     Set<char> six{'R'};
 
     for (int i = 0; i < s.length(); i++) {
-        if (zero.contains(toUpperCase(s[i])))
+        char c = toUpperCase(s.at(i));
+        if (zero.contains(c))
             result += "0";
-        if (one.contains(toUpperCase(s[i])))
+        if (one.contains(c))
             result += "1";
-        if (two.contains(toUpperCase(s[i])))
+        if (two.contains(c))
             result += "2";
-        if (three.contains(toUpperCase(s[i])))
+        if (three.contains(c))
             result += "3";
-        if (four.contains(toUpperCase(s[i])))
+        if (four.contains(c))
             result += "4";
-        if (five.contains(toUpperCase(s[i])))
+        if (five.contains(c))
             result += "5";
-        if (six.contains(toUpperCase(s[i])))
+        if (six.contains(c))
             result += "6";
     }
 
     return result;
 }
 
-string coalesce(string s) {
+string reduceReduance(string s) {
     if (s.empty()) {
         return s;
     }
@@ -82,9 +83,8 @@ string coalesce(string s) {
     return result;
 }
 
-string header(string s, string orgin)
+string checkFirstCharacter(string s, string orgin)
 {
-
   if (!orgin.empty()) {
       //  s[0] = toUpperCase(orgin[0]);
       s.replace(0, 1, charToString(toUpperCase(orgin[0])));
@@ -95,7 +95,7 @@ string header(string s, string orgin)
   return s;
 }
 
-string remove_zero(string s) {
+string removeZeros(string s) {
     string result = charToString(s[0]);
     for (int i = 1; i < s.length(); i++) {
         if (charToInteger(s[i]) == 0)
@@ -105,7 +105,7 @@ string remove_zero(string s) {
     return result;
 }
 
-string round(string s) {
+string padZeros(string s) {
     string result = "";
     for (int i = 0; i < 4; i++) {
         if (i >= s.length())
@@ -119,7 +119,7 @@ string round(string s) {
 string soundex(string s) {
     string s_nonletters = removeNonLetters(s);
 
-    return round(remove_zero(header(coalesce(encode(s_nonletters)), s_nonletters)));
+    return padZeros(removeZeros(checkFirstCharacter(reduceReduance(character2digital(s_nonletters)), s_nonletters)));
 }
 
 
@@ -186,13 +186,13 @@ PROVIDED_TEST("Test removing puntuation, digits, and spaces") {
     EXPECT_EQUAL(result, "xyz");
 }
 
-PROVIDED_TEST("encode string") {
-    EXPECT_EQUAL(encode("Curie"), "20600");
+PROVIDED_TEST("encode from alphabetic characters to digitals") {
+    EXPECT_EQUAL(character2digital("Curie"), "20600");
 }
 
-PROVIDED_TEST("coalesce encoder") {
-    EXPECT_EQUAL(coalesce("20600"), "2060");
-    EXPECT_EQUAL(coalesce("222025"), "2025");
+PROVIDED_TEST("reduce reduance digitals") {
+    EXPECT_EQUAL(reduceReduance("20600"), "2060");
+    EXPECT_EQUAL(reduceReduance("222025"), "2025");
 }
 
 PROVIDED_TEST("Sample inputs from handout") {
