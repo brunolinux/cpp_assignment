@@ -171,20 +171,76 @@ bool findNextLocation(Grid<bool>& maze, Stack<Set<GridLocation>> &path_set, Stac
     return false;
 }
 
+bool findPathByBFS(Grid<bool>& maze, Stack<GridLocation> &target_path)
+{
+    Queue<Stack<GridLocation>> search_queue;
+    Stack<GridLocation> init_path;
+    init_path.push(GridLocation{0, 0});
+    search_queue.enqueue(init_path);
+
+    while (true) {
+        int number = search_queue.size();
+
+        if (number == 0) {
+            break;
+        }
+
+        for (int i = 0; i < number; i ++) {
+            Stack<GridLocation> path = search_queue.dequeue();
+
+            // gui
+            MazeGraphics::highlightPath(path, "green", 10);
+
+            auto cur_loc = path.peek();
+
+            if (cur_loc == GridLocation{maze.numRows()-1,  maze.numCols()-1}) {
+                target_path = path;
+                return true;
+            }
+
+            Set<GridLocation> next_locs = generateValidMoves(maze, cur_loc);
+            {
+                Set<GridLocation> past_locs;
+                Stack<GridLocation> path_clone = path;
+                while (!path_clone.isEmpty()) {
+                    past_locs.add(path_clone.pop());
+                }
+
+                next_locs.difference(past_locs);
+            }
+
+            for (auto next_loc : next_locs) {
+                Stack<GridLocation> path_clone = path;
+                path_clone.push(next_loc);
+                search_queue.enqueue(path_clone);
+            }
+        }
+    }
+    return false;
+}
 
 /*
+ * solve maze problem by DFS
  */
 Stack<GridLocation> solveMaze(Grid<bool>& maze) {
+
+    // method by DFS
+//    MazeGraphics::drawGrid(maze);
+//    Stack<GridLocation> path;
+//    /* TODO: Fill in the remainder of this function. */
+//    GridLocation init_loc(0, 0);
+//    Set<GridLocation> init_set{init_loc};
+
+//    Stack<Set<GridLocation>> path_set;
+//    path_set.push(init_set);
+//    findNextLocation(maze, path_set, path);
+
+//    return path;
+
+    // method by BFS
     MazeGraphics::drawGrid(maze);
     Stack<GridLocation> path;
-    /* TODO: Fill in the remainder of this function. */
-    GridLocation init_loc(0, 0);
-    Set<GridLocation> init_set{init_loc};
-
-    Stack<Set<GridLocation>> path_set;
-    path_set.push(init_set);
-    findNextLocation(maze, path_set, path);
-
+    findPathByBFS(maze, path);
     return path;
 }
 
