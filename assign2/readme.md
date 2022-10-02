@@ -7,25 +7,21 @@
 调试器面板和文档有些不同，我的没有 top 和 bottom 标签
 
 ### Q2 具体是什么情况，会造成函数 `duplicateNegatives` 无限循环执行？
-答: 因为 `duplicateNegatives` 在队列循环内部直接修改队列，导致队列长度无限增加
+答: 因为 `duplicateNegatives` 在队列循环内部直接修改队列，导致队列长度改变，for 循环的终止条件无法满足。具体是: 尾部插入元素也是负数，导致每个它们都会额外增加元素，从而无限增加下去
 
 ### Q3：解释下你编辑过的代码是如何修复 duplicateNegatives 中的问题的。
 解决办法: 
-使用一个额外的队列存放结果，在循环结果后复制给原始队列
+在循环开始前，记录初始队列长度
+注: 队列具有先进先出的特性，因此如果将取出的元素重新插入队列，可以视为循环列表操作
 ```c++
-void duplicateNegatives(Queue<int>& q) {
-    Queue<int> temp;
-
-    while (q.size() != 0) {
+    int size = q.size();
+    for (int i = 0; i < size; i++) {
         int val = q.dequeue();
-        temp.enqueue(val);
+        q.enqueue(val);
         if (val < 0) {
-            temp.enqueue(val);   // double up on negative numbers
+            q.enqueue(val);   // double up on negative numbers
         }
     }
-
-    q = std::move(temp);
-}
 ```
 
 ### Q4：思考下如何更好的修复 sumStack 中的 bug？

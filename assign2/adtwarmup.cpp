@@ -27,17 +27,26 @@ void reverse(Queue<int>& q) {
  * information on how to test and diagnose.
  */
 void duplicateNegatives(Queue<int>& q) {
-    Queue<int> temp;
+    // old method
+//    Queue<int> temp;
+//    while (q.size() != 0) {
+//        int val = q.dequeue();
+//        temp.enqueue(val);
+//        if (val < 0) {
+//            temp.enqueue(val);   // double up on negative numbers
+//        }
+//    }
+//    q = std::move(temp);
 
-    while (q.size() != 0) {
+    // first in first out, like a circular buffer
+    int size = q.size();
+    for (int i = 0; i < size; i++) {
         int val = q.dequeue();
-        temp.enqueue(val);
+        q.enqueue(val);
         if (val < 0) {
-            temp.enqueue(val);   // double up on negative numbers
+            q.enqueue(val);   // double up on negative numbers
         }
     }
-
-    q = std::move(temp);
 }
 
 // This function is intended to return the sum of all values in
