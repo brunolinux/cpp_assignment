@@ -87,13 +87,16 @@ Queue<int> recMultiMerge(Vector<Queue<int>>& all) {
         Vector<Queue<int>> left;
         Vector<Queue<int>> right;
 
-        int i = 0;
-        for (; i < all.size() / 2; i++) {
-            left.add(all[i]);
-        }
-        for (; i < all.size(); i ++) {
-            right.add(all[i]);
-        }
+        int mid_index = all.size() / 2;
+        left = all.subList(0, mid_index);
+        right = all.subList(mid_index);
+//        int i = 0;
+//        for (; i < ; i++) {
+//            left.add(all[i]);
+//        }
+//        for (; i < all.size(); i ++) {
+//            right.add(all[i]);
+//        }
 
         Queue<int> left_queue = recMultiMerge(left);
         Queue<int> right_queue = recMultiMerge(right);
